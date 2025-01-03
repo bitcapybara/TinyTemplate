@@ -214,9 +214,13 @@ impl<'template> TinyTemplate<'template> {
         C: Serialize,
     {
         let value = serde_json::to_value(context)?;
+        self.render_value(template, &value)
+    }
+
+    pub fn render_value(&self, template: &str, context: &Value) -> Result<String> {
         match self.templates.get(template) {
             Some(tmpl) => tmpl.render(
-                &value,
+                context,
                 &self.templates,
                 &self.formatters,
                 self.default_formatter,
